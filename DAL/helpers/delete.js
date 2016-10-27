@@ -3,7 +3,7 @@ const PouchDB = require('pouchdb-http');
 const db = new PouchDB("http://127.0.0.1:5984/relief-tracker")
 
 function deleteDoc(doc, cb) {
-    if (prop('_rev')(doc) === undefined && prop('_id')(doc) === undefined) {
+    if (prop('_rev')(doc) === undefined || prop('_id')(doc) === undefined) {
         return cb(new Error('400 _rev or _id is missing'))
     }
     db.remove(doc).then(function(res) {

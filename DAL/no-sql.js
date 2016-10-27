@@ -14,6 +14,29 @@ const createPerson = require('./helpers/createPerson.js')
 const createReliefEffort = require('./helpers/createReliefEffort.js')
 const get = require('./helpers/get.js')
 
+function listPersons(by){
+  var options = {limit : 5};
+
+
+  db.query('email',{
+    limit: 5
+  },function(err,res){
+    if(err) console.log(err.message)
+    if(res){
+      console.log(res)
+      var options = {limit : 5};
+      // (function fetchNextPage(){
+      //   db.allDocs(options,function(err,res){
+      //     console.log(res)
+      //     if(res && res.rows.length > 0){
+      //       options.startkey = res.rows[res.rows.length - 1]
+      //       options.skip = 1
+      //     }
+      //   })
+      // })()
+    }
+  })
+}
 
 
 var dal = {
@@ -22,7 +45,8 @@ var dal = {
     deletePerson: rm.person,
     deleteReliefEffort: rm.reliefEffort,
     getPerson: get.person,
-    getReliefEffort: get.reliefEffort
+    getReliefEffort: get.reliefEffort,
+    listPersonsBy: listPersons
 }
 
 module.exports = dal
