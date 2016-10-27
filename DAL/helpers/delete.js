@@ -1,7 +1,6 @@
 const { prop, forEach } = require('ramda');
 const PouchDB = require('pouchdb-http');
-
-const db = new PouchDB("http://127.0.0.1:5984/relief-tracker");
+const db = new PouchDB("http://127.0.0.1:5984/relief-tracker")
 
 function deleteDoc(doc, cb) {
     if (prop('_rev')(doc) === undefined && prop('_id')(doc) === undefined) {
