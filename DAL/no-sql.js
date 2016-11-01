@@ -3,7 +3,11 @@ const path = require('path');
 const PouchDB = require('pouchdb-http');
 PouchDB.plugin(require('pouchdb-mapreduce'));
 const fetchConfig = require('zero-config');
-const { prop, forEach } = require('ramda');
+const {
+    prop,
+    forEach,
+    map
+} = require('ramda');
 var config = fetchConfig(path.join(__dirname, '..'), {
     dcValue: 'test'
 });
@@ -14,32 +18,7 @@ const createPerson = require('./helpers/createPerson.js')
 const createReliefEffort = require('./helpers/createReliefEffort.js')
 const get = require('./helpers/get.js')
 const update = require('./helpers/update.js')
-
-function listPersons(by){
-  var options = {limit : 5};
-
-
-  db.query('email',{
-    limit: 5
-  },function(err,res){
-    if(err) console.log(err.message)
-    if(res){
-      console.log(res)
-      var options = {limit : 5};
-      // (function fetchNextPage(){
-      //   db.allDocs(options,function(err,res){
-      //     console.log(res)
-      //     if(res && res.rows.length > 0){
-      //       options.startkey = res.rows[res.rows.length - 1]
-      //       options.skip = 1
-      //     }
-      //   })
-      // })()
-    }
-  })
-
-}
-
+const queryDb = require('./helpers/queryDb.js')
 
 
 var dal = {
@@ -51,7 +30,9 @@ var dal = {
     getReliefEffort: get.reliefEffort,
     updatePerson: update.person,
     updateReliefEffort: update.reliefEffort,
-    listPersonsBy: listPersons
+    listReliefEfforts: queryDb,
+    listPersons: queryDb
+
 }
 
 module.exports = dal
