@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 3031
+const port = process.env.PORT || 3033
 const HTTPerror = require('node-http-error')
 const dal = require('../DAL/no-sql.js')
 const bodyParser = require('body-parser')
@@ -87,6 +87,24 @@ app.get('/person/:personId',function(req,res,next){
   })
 })
 
+app.get('/persons',function(req,res){
+  const sortByParam = req.query.soryby || 'lastname'
+  // const sortBy = getPersonSortBy(sortByParam, dalModule)
+  const sortBy = sortByParam
+  const sortToken = req.query.sorttoken || ''
+  const limit = req.query.limit || 5
+
+
+  dal.listPersons(sortBy, sortToken, limit, function callback(err,data){
+    if(err){
+      return console.log(err.message)
+    }
+    if(data){
+      res.send(data)
+    }
+  })
+})
+
 
 app.post('/person',function(req,res,next){
   dal.createPerson(req.body,function(err,body){
@@ -106,6 +124,66 @@ app.post('/reliefefforts',function(req,res,next){
       next(personErr)
     }else {
       res.send(body)
+    }
+  })
+})
+
+app.put('/person/:personId',function(req,res,next){
+      dal.updatePerson(req.body,function(err,body){
+        if(err){
+          var putErr = BuildResponseError(err)
+          next(putErr)
+        }else {
+          res.send(body)
+        }
+      })
+    })
+
+app.put('/reliefefforts/:reliefId',function(req,res,next){
+      dal.updateReliefEffort(req.body,function(err,body){
+        if(err){
+          var putErr = BuildResponseError(err)
+          next(putErr)
+        }else {
+          res.send(body)
+        }
+      })
+    })
+
+
+
+app.delete('/person/:personId',function(req,res,next){
+  dal.getPerson(req.params.personId,function(err,body){
+    if(err){
+      var personErr = BuildResponseError(err)
+      next(personErr)
+    }else{
+      dal.deletePerson(body,function(err,body){
+        if(err){
+          var deleteErr = BuildResponseError(err)
+          next(deleteErr)
+        }else {
+          res.send(body)
+        }
+      })
+    }
+  })
+})
+
+app.delete('/reliefEffort/:reliefId',function(req,res,next){
+  dal.getReliefEffort(req.params.reliefId,function(err,body){
+    if(err){
+      var reliefErr = BuildResponseError(err)
+      next(reliefErr)
+    }else{
+      dal.deleteReliefEffort(body,function(err,body){
+        if(err){
+          var deleteErr = BuildResponseError(err)
+          next(deleteErr)
+        }else {
+          res.send(body)
+        }
+      })
     }
   })
 })
